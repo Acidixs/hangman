@@ -1,32 +1,41 @@
-secretWord = "Python"
+import time
 
-attempt_count = 0
-attempt_limit = 10
+from hangman_pics import HANGMANPICS
 
-incorrectChar = []
-correctChar = []
+word = "Python".lower()
+blanks = list("_" * len(word))
 
-print("H A N G M A N")
-blanks = "_" * len(secretWord)
-print(blanks)
+guessed_letters = []
+wrong_letters = []
+attempts = 7
 
-while attempt_count != attempt_limit:
+while attempts > 0:
 
-    charInput = input("Guess a character from the word: ")
+    if "".join(guessed_letters) == word:
+        print("You win!")
+        exit(1)
 
-    if charInput.lower() not in "abcdefghijklmnopqrstuvwxyz":
-        print("Enter a character from the alphabet, a-z")
+    print("HANGMAN")
+    print(HANGMANPICS[len(wrong_letters)])
+
+    print("".join(blanks))
+    guess = str(input("Guess a letter: ")).lower()
+
+    if guess in guessed_letters:
+        print("You have already guessed that letter")
+        time.sleep(2)
         continue
 
-    if charInput.lower() in secretWord.lower():
-        print("The word contains " + charInput)
-        attempt_count += 1
-        incorrectChar.append(charInput)
+    guessed_letters.append(guess)
+
+    if guess in word:
+        wordIndex = word.find(guess)
+        blanks[wordIndex] = guess
+        print("".join(blanks))
 
     else:
-        print(charInput + " is not in the word")
-        attempt_count += 1
-        incorrectChar.append(charInput)
+        wrong_letters.append(word)
+        attempts -= 1
 
-
-print("You failed, out of attempts!")
+print(f"You are out of attempts! The word was {word}")
+exit(1)
